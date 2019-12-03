@@ -1,0 +1,65 @@
+<launch>    
+    <!-- Connect two both raspi's -->
+    <machine name="left_pi" address="192.168.1.2" user="pi" password="raspberry" env-loader="/home/pi/Documents/catkin_ws/devel/env.sh"/>
+    <machine name="right_pi" address="192.168.1.3" user="pi" password="raspberry" env-loader="/home/pi/catkin_ws/devel/env.sh"/>
+
+    <!-- Setup default variables -->
+    <arg name="enable_raw" default="true"/>
+    <arg name="enable_imv" default="false"/>
+    <arg name="camera_id" default="0"/>
+    <arg name="camera_frame_id" default="map"/>
+    <arg name="camera_name" default="camerav1_1280x720"/>
+    <arg name="camera_framerate" default="90"/>
+    <arg name="camera_width" default="1280"/>
+    <arg name="camera_height" default="720"/>
+    <arg name="camera_quality" default="100"/>
+
+    <group ns="/stereo">
+        <!-- Remap output parameters to match stereo_image_proc -->
+        <remap from="left/image" to="left/async/image_raw"/>
+        <remap from="right/image" to="right/async/image_raw"/>
+        <remap from="left/camera_info" to="left/async/camera_info"/>
+        <remap from="right/camera_info" to="right/async/camera_info"/>
+
+        <!-- Setup left camera -->
+        <node machine="left_pi" type="raspicam_node" pkg="raspicam_node" name="left">
+            <param name="private_topics" value="true"/>
+
+            <param name="camera_frame_id" value="$(arg camera_frame_id)"/>
+            <param name="enable_raw" value="$(arg enable_raw)"/>
+            <param name="enable_imv" value="$(arg enable_imv)"/>
+            <param name="camera_id" value="$(arg camera_id)"/>
+
+            <param name="camera_info_url" value="package://raspicam_node/camera_info/camerav1_1280x720.yaml"/>
+            <param name="camera_name" value="$(arg camera_name)"/>
+            <param name="width" value="$(arg camera_width)"/>
+            <param name="height" value="$(arg camera_height)"/>
+            <param name="framerate" value="$(arg camera_framerate)"/>
+            <param name="quality" value="$(arg camera_quality)"/>"
+        </node>
+
+        <!-- Setup right camera -->
+        <node machine="right_pi" type="raspicam_node" pkg="raspicam_node" name="right">
+            <param name="private_topics" value="true"/>
+
+            <param name="camera_frame_id" value="$(arg camera_frame_id)"/>
+            <param name="enable_raw" value="$(arg enable_raw)"/>
+            <param name="enable_imv" value="$(arg enable_imv)"/>
+            <param name="camera_id" value="$(arg camera_id)"/>
+
+            <param name="camera_info_url" value="package://raspicam_node/camera_info/camerav1_1280x720.yaml"/>
+            <param name="camera_name" value="$(arg camera_name)"/>
+            <param name="width" value="$(arg camera_width)"/>
+            <param name="height" value="$(arg camera_height)"/>
+            <param name="framerate" value="$(arg camera_framerate)"/>
+            <param name="quality" value="$(arg camera_quality)"/>"
+        </node>
+    </group>
+
+    <group ns="/stereo">
+        <!-- Setup left/right image/camera_info synchronizer -->
+        <node pkg="project_fetch" type="synchronizer" name="synchronizer"/>
+        <!-- synchronizer has hardcoded topics -->
+    </group>
+
+</launch>

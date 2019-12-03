@@ -1,0 +1,3 @@
+/home/pi/catkin_ws/src/project_fetch/test/CMakeFiles/rebuild_cache.dir
+/home/pi/catkin_ws/src/project_fetch/test/CMakeFiles/Test.dir
+/home/pi/catkin_ws/src/project_fetch/test/CMakeFiles/edit_cache.dir

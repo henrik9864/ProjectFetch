@@ -1,0 +1,16 @@
+<launch>
+    <arg name="gui" default="false"/>
+    <arg name="image" default="image_raw"/>
+    <arg name="objects_path" default="$(find project_fetch)/objects"/>
+    <arg name="session_path" default=""/>
+    <arg name="settings_path" default=""/>
+
+    <remap from="image" to="left/$(arg image)"/>
+
+    <node pkg="find_object_2d" type="find_object_2d" name="find_object_2d" ns="/stereo">
+        <param name="gui" value="$(arg gui)"/>
+        <param name="objects_path" value="$(arg objects_path)"/>
+        <param name="session_path" value="$(arg session_path)"/>
+        <param name="settings_path" value="$(arg settings_path)"/>
+    </node>
+</launch>
